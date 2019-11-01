@@ -8,16 +8,16 @@ using Xunit.Abstractions;
 
 namespace nmcforecasting.tests
 {
-    public class Scratchpad
+    public class Simulate_rolling_two_dice
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public Scratchpad(ITestOutputHelper testOutputHelper) {
+        public Simulate_rolling_two_dice(ITestOutputHelper testOutputHelper) {
             _testOutputHelper = testOutputHelper;
         }
 
         [Fact]
-        public void Simulate_rolling_two_dice()
+        public void Run()
         {
             var rnd = new Random();
             
