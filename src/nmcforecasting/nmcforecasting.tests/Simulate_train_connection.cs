@@ -27,6 +27,7 @@ namespace nmcforecasting.tests
             var rnd = new Random();
             
             T PickSingleEvent<T>(T[] events) => events[rnd.Next(events.Length)];
+            // for each leg of the journey random connections are chosen
             (int, (int,int), (int,int)) SimulateCombinedEvent() => (
                 PickSingleEvent(ice875_ad),
                 PickSingleEvent(ic2443_dd_ad),
@@ -41,6 +42,7 @@ namespace nmcforecasting.tests
         public void Run_scenario_2() {
             var rnd = new Random();
             
+            // a full connection is taken from the historical data
             (int, (int,int), (int,int)) SimulateCombinedEvent() {
                 var i = rnd.Next(ice875_ad.Length);
                 return (
