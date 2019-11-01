@@ -121,6 +121,47 @@ Running the MC simulation then creates a distribution like this:
 
 From it the person travelling can pick an answer to the question according to his/her risk attitude. Maybe the person is feeling confident and "bets on" a 45% chance to arrive with a delay of 20min or less. Or the person wants to "bet on" the most probable delay: 61min, with a probability of roughly 0,1 (and a 50% chance of being that late or arriving earlier). And if there was a really important meeting for the person and he/she wants to be on the safe side then he/she could go for a 83% chance to arrive with 72min delay (or earlier).
 
+## Forecasting software delivery
+Software requirements are presented as stories. They get implemented as one or more issues.
+
+Issues can be tagged, e.g. as "bug" or "feature" or "frontend" or "backend" or a developer's name. Also issues can be linked to a story by carrying its id.
+
+For software delivery forecasting historical issue data consists of:
+
+* start date
+* completion date
+* tags
+* story id
+
+From that the cylce time (CT) can be calculated (completion date - start date).
+
+Example:
+
+![](images/issue_delivery_log.png)
+
+Forecasting software delivery means answering the question "When will it be done?" or "How long will these features take to be implemented?"
+
+### Single issue
+Forecasting single issue delivery is easy. It means just looking up a percentile in the distribution.
+
+![](images/single_issue_distribution.png)
+
+Delivering the next issue will take 5 or less days with a probability of around 0,85.
+
+But if it's known that the next issue is a bug fix or a feature then the forecast can be based on the relevant subset of issues in the historical data:
+
+![](images/single_feature_dist.png)
+![](images/single_bug_fix_dist.png)
+
+For a feature issue the 0,85 probability predicts 6 days or less. But for a bug fix it's just 4 days.
+
+### Multiple issues (WIP=1)
+
+
+
+### Multiple issues (WIP>1)
+### Story refinement 
+
 
 
 
