@@ -155,11 +155,49 @@ But if it's known that the next issue is a bug fix or a feature then the forecas
 
 For a feature issue the 0,85 probability predicts 6 days or less. But for a bug fix it's just 4 days.
 
-### Multiple issues (WIP=1)
+### Multiple issues (single resource)
+Forecasting the delivery of multiple issues requires simulation. The tuple to simulate is an array matching the number of issues to forecast. Its elements are randomly taken from the issues' historical data. Different historical data can be passed in for each issue.
+
+The tuple's elements then are added up to give a total cycle time for all issues.
+
+Example: Forecast the delivery of 8 issues being 3 frontend features, 1 backend bug, and a 4 backend features.
+
+The resulting distribution then might look like this:
+
+![](images/multi_feature_forecast.png)
+
+With a probability of around 0,83 a delivery within 33 days or less can be expected. The forecast is based on issue subsets of 13, 5, and 12 issues respectively. (The distribution is looking like a normal distribution due to the Central Limit Theorem.)
+
+**Doing the forecast in this way assumes the issues are worked on sequentially.**
+
+### Multiple issues I (multiple resources)
+Usually more than one developer is working on issue delivery. Issues then are implemented in parallel. Issues can be assigned to each "programming resource" (a developer or a pair) to be worked on sequentially whenever a "resource" finishes an issue.
+
+Example: 3 resources working on issues with these cycle times: 3,2,5,1,4,6,2,3
+
+* Resource 1: 3 (∑3), 4 (∑7), 3 (∑10)
+* Resource 2: 2 (∑2), 1 (∑3), 6 (∑9)
+* Resource 3: 5 (∑5), 2 (∑7)
+
+The total delivery time would be 10 days.
+
+Algorithm: Each issue assigned to a resource prolongs its busyness. The resource to assign an issue to is the least busy one. With equal busyness issues are assigned starting at the resource with the lowest index.
+
+Again 8 issues being 3 frontend features, 1 backend bug, and a 4 backend features are used in the following simulation with 3 resources:
+
+![](images/multi_feature_forecast_3_resources.png.png)
+
+The p=0,83 delivery time is 13 to 14 days or less. (If parallel work can be done in a reasonable way the employment of multiple resources speeds up delivery.)
+
+Working with just a single resource can be viewed as a special case of multi-resource work.
+
+### Multiple issues I (throughput based)
+no tags
+no resources
 
 
 
-### Multiple issues (WIP>1)
+
 ### Story refinement 
 
 
