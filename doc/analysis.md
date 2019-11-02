@@ -224,7 +224,12 @@ If the historical data is limited then more data can been generated with a Monte
 5. Calculate the distribution from the histogram
 6. Loop up the forecast in the distribution, e.g. as an event's probability or its percentile
 
+### Insight
+> The most likely outcome is not very likely!
 
+Rolling a sum of 7 with the next two roles is the most likely outcome - but its probability still is just 0,172 according to the simulation, which is not very high.
+
+Betting on a single outcome thus is begging for disappointment.
 
 
 

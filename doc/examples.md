@@ -191,12 +191,49 @@ The p=0,83 delivery time is 13 to 14 days or less. (If parallel work can be done
 
 Working with just a single resource can be viewed as a special case of multi-resource work.
 
+Likewise single issue forecasting is a special case of multi-issue forecasting.
+
 ### Multiple issues I (throughput based)
-no tags
-no resources
+Forecasting based on multiple resources working on issues is assuming continuous and sequential work on issues for each resource. That's the ideal case, but maybe not realistic enough.
 
+Another approach to forecasting is more forgiving in this regard. It does not use cycle times but throughput (TP).
 
+TP is the number of features delivered each day in the date range of the issues recorded (from earliest start date until latest completion date).
 
+For the above historical data that leads to (including all weekends):
+
+![](images/throughput.png)
+
+However, this includes weekends which did not and probably will not create throughput. Hence the working day historical data is the following:
+
+![](images/throughput_no_weekends.png)
+
+Each run of an MC simulation starts at the same day and for each day selects a random TP value from the historical data until as many issues have been delivered as asked for.
+
+Example: Deliver 8 issues starting on Nov. 18th 2019.
+
+| Date | Random TP | Total issues delivered |
+| --- |:---:|:---:|
+| 18.11.19 | 2 | 2 |
+| 19.11.19 | 0 | 2 |
+| 20.11.19 | 1 | 3 |
+| 21.11.19 | 1 | 4 |
+| 22.11.19 | 0 | 4 |
+| 23.11.19 | - | 4 |
+| 24.11.19 | - | 4 |
+| 25.11.19 | 3 | 7 |
+| 26.11.19 | 0 | 7 |
+| 27.11.19 | 1 | 8 |
+
+In this run delivery takes 10 days: from 18.11.19 until 27.11.19. Weekends were purposefully skipped.
+
+*Note: Selecting a subset of issues by tag is possible here too, but hardly produces good forecasting results because the throughput data per tag combination might be very scarce.*
+
+The result of 10.000 simulation runs could look like this:
+
+![](images/multi_feature_based_on_tp.png)
+
+The p=0,83 forecast is 10 days or less. It seems, not strictly assigning resources to issues helps to deliver faster.
 
 ### Story refinement 
 
