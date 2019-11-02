@@ -233,7 +233,7 @@ The result of 10.000 simulation runs could look like this:
 
 ![](images/multi_feature_based_on_tp.png)
 
-The p=0,83 forecast is 10 days or less. It seems, not strictly assigning resources to issues helps to deliver faster.
+The p=0,83 forecast is 10 days or less. It seems, not strictly assigning resources to resources helps to deliver faster. Or maybe more resources were employed during collection of the historical data.
 
 ### Story refinement 
 
