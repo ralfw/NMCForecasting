@@ -212,18 +212,18 @@ Each run of an MC simulation starts at the same day and for each day selects a r
 
 Example: Deliver 8 issues starting on Nov. 18th 2019.
 
-| Date | Random TP | Total issues delivered |
+| Date (day) | Random TP | Total issues delivered |
 | --- |:---:|:---:|
-| 18.11.19 | 2 | 2 |
-| 19.11.19 | 0 | 2 |
-| 20.11.19 | 1 | 3 |
-| 21.11.19 | 1 | 4 |
-| 22.11.19 | 0 | 4 |
-| 23.11.19 | - | 4 |
-| 24.11.19 | - | 4 |
-| 25.11.19 | 3 | 7 |
-| 26.11.19 | 0 | 7 |
-| 27.11.19 | 1 | 8 |
+| 18.11.19 (1) | 2 | 2 |
+| 19.11.19 (2) | 0 | 2 |
+| 20.11.19 (3) | 1 | 3 |
+| 21.11.19 (4) | 1 | 4 |
+| 22.11.19 (5) | 0 | 4 |
+| 23.11.19 (6) | - | 4 |
+| 24.11.19 (7) | - | 4 |
+| 25.11.19 (8) | 3 | 7 |
+| 26.11.19 (9) | 0 | 7 |
+| 27.11.19 (10) | 1 | 8 |
 
 In this run delivery takes 10 days: from 18.11.19 until 27.11.19. Weekends were purposefully skipped.
 
@@ -235,7 +235,31 @@ The result of 10.000 simulation runs could look like this:
 
 The p=0,83 forecast is 10 days or less. It seems, not strictly assigning resources to resources helps to deliver faster. Or maybe more resources were employed during collection of the historical data.
 
-### Story refinement 
+### Story refinement
+Once the number of issues to implement is known, the delivery can be forecast based on historical issue cycle times.
+
+If there are no issues yet, though, but just stories, a step inbetween has to be taken: forecasting the number of issues.
+
+![](images/stories_and_issues.png)
+
+The issue/story ratio follows a distribution of its own. If, for example, 10 stories have to be implemented the number of issues can be MC simulated based on the historical data - plus 40% bug issues on top (as also is in the historical data).
+
+Forecast for the number of issues resulting from 10 stories:
+
+![](images/issues_for_stories_forecast.png)
+
+With p=0,83 10 stories will result in 48 issues or less (including bug fixes).
+
+Forecast of the delivery time for the 48 issues:
+
+![](images/ct_for_issues_for_stories_forecast.png)
+
+With p=0,86 48 issues will be delivered in 58 days.
+
+To be more precise even rough complexity/size estimates could be factored in. Example: there are 3 Small issues to be implemented, 5 Medium issues, and 2 Large ones. Each t-shirt size story category is represented by its own historical data during issue simulation.
+
+
+
 
 
 
