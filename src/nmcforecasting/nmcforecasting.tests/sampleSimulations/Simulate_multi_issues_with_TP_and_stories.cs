@@ -88,12 +88,12 @@ namespace nmcforecasting.tests
         
 
         [Fact]
-        public void Forecast_10_stories()
+        public void Forecast_10_stories_with_single_issue_forecast()
         {
             DateTime START_DATE = new DateTime(2019,11,18);
             const int NUMBER_OF_STORIES = 10;
             
-            var issues = Import("sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
             var issue_story_ratios = Compile_issue_story_ratios(issues);
             
             // simulate number of issues
@@ -136,6 +136,62 @@ namespace nmcforecasting.tests
             var histogram = Histogram(simulationResults);
             var distribution = Distribution(histogram);
             
+            foreach (var x in distribution.OrderBy(o => o.value))
+                _testOutputHelper.WriteLine($"{x.value}\t{x.f}\t{x.p.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
+        }
+        
+        
+        [Fact]
+        public void Forecast_10_stories_for_all_issue_forecasts()
+        {
+            DateTime START_DATE = new DateTime(2019,11,18);
+            const int NUMBER_OF_STORIES = 10;
+            
+            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
+            var issue_story_ratios = Compile_issue_story_ratios(issues);
+            
+            // simulate number of issues
+            var rnd = new Random();
+
+            int SimulateNumberOfIssuesForStories(int number_of_stories) {
+                var numberOfFeatureIssues = 
+                    Enumerable.Range(1, number_of_stories)
+                              .Select(_ => issue_story_ratios.issueFrequencies[rnd.Next(issue_story_ratios.issueFrequencies.Length)])
+                              .Sum();
+                var numberOfBugIssues = (int)Math.Round(numberOfFeatureIssues * issue_story_ratios.bug_ratio);
+                return numberOfFeatureIssues + numberOfBugIssues;
+            }
+            
+            int[] MCSimulation_features(int n) => Enumerable.Range(1, n)
+                                                            .Select(_ => SimulateNumberOfIssuesForStories(NUMBER_OF_STORIES))
+                                                            .ToArray();
+
+            var issueSimulationResult = MCSimulation_features(10000);
+            var issueHistogram = Histogram(issueSimulationResult);
+            
+            var tp = Compile_throughput(issues);
+            
+            
+            _testOutputHelper.WriteLine("Simulate delivery for...");
+            var totalDeliveryHistogram = new Dictionary<int,int>();
+            foreach(var issueForecast in issueHistogram) {
+                _testOutputHelper.WriteLine($"  {issueForecast.value} issues");
+                
+                int[] MCSimulation_CT(int n) => Enumerable.Range(1, n).Select(_ => SimulateDelivery(START_DATE, issueForecast.value, tp, rnd)).ToArray();
+                
+                var deliverySimulation = MCSimulation_CT(10000);
+                var deliveryHistogram = Histogram(deliverySimulation);
+
+                foreach (var delivery in deliveryHistogram) {
+                    if (totalDeliveryHistogram.ContainsKey(delivery.value) is false)
+                        totalDeliveryHistogram.Add(delivery.value, 0);
+                    totalDeliveryHistogram[delivery.value] += delivery.f;
+                }
+            }
+            
+            var distribution = Distribution(totalDeliveryHistogram.Select(x => (x.Key, x.Value)).ToArray());
+            
+            var deDE = new CultureInfo("de-DE");
             foreach (var x in distribution.OrderBy(o => o.value))
                 _testOutputHelper.WriteLine($"{x.value}\t{x.f}\t{x.p.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
         }

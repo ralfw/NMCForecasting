@@ -1,11 +1,11 @@
 # Monte Carlo Forecasting Analysis
 Forecasting is understood as prediction based on historical data. Example:
 
-> Predict the next role of a dice based on previous roles, e.g. [4,5,6,2,1,5,3,3,4,1,4,1,2,2,4,6,3,5,1].
+> Predict the next roll of a dice based on previous rolls, e.g. [4,5,6,2,1,5,3,3,4,1,4,1,2,2,4,6,3,5,1].
 
 Based on the historical data a probability distribution can be calculated:
 
-| Roled | Frequency (f) | Probability (p)	 | Percentile |
+| Rolled | Frequency (f) | Probability (p)	 | Percentile |
 |:---:|:---:|:---:|:---:|
 | 1	 | 4 | 0,21 | 21%
 | 2	 | 3 | 0,16 | 37%
@@ -15,11 +15,11 @@ Based on the historical data a probability distribution can be calculated:
 | 6	 | 2 | 0,11 | 100%
 
 ## Forecasting a single event
-Answering the question "What's the next role most likely going to be?" means making a forecast. An answer can be found by looking up the probabilities in a distribution.
+Answering the question "What's the next roll most likely going to be?" means making a forecast. An answer can be found by looking up the probabilities in a distribution.
 
-According to the above observation-based distribution `1` and `4` are the most likely next roles (both with an individual probability of 0,21).
+According to the above observation-based distribution `1` and `4` are the most likely next rolls (both with an individual probability of 0,21).
 
-But also: The probability of the next role being `3` *or less* is 0,53.
+But also: The probability of the next roll being `3` *or less* is 0,53.
 
 Of course historical data usually is not needed with dice. The probabilities are obvious from the beginning: for every face of the dice it's 1/6=0,1667. At least if the dice is fair.
 
@@ -29,13 +29,13 @@ However, if it's not known if a dice is fair or with any other events with unkow
 
 * **Event**: Something that can happen, e.g. when roling a dice there are six possible events: `1`, `2`, `3`, `4`, `5`, `6`.
 * **Type** of event: *face of dice* or *side of coin*
-* **Observation**: an event that happened, e.g. a dice was roled and shows a `2`.
+* **Observation**: an event that happened, e.g. a dice was rolled and shows a `2`.
 * **Historical data**: a log of observations
 * **Probability**: Likelihood that an event will be observed. Calculated by dividing the number of observations (e.g. 2) of a certain event (e.g. `6`) by the total number of observations (e.g. 19), e.g. 2/19=0,11.
 * **Percentile**: Percentage of observations up to and including a certain event (e.g. `3`) in a distribution ordered by event (e.g. `[1,2,3,4,5,6]`), e.g. (4+3+3)/19x100=53%. The percentile can be interpreted as the probability of an event being one from a set of events, e.g. the probability of roling a `1` *or* `2` *or* `3` (read: a `3` *or less*) is 0,53. Pre-requisite: events are independent of each other.
 
 ## Forecasting combinations of events
-"What's the probability of the next two roles of a dice being first `2` and then `4`?" or "What's the 'risk' of the the sum of the next two roles of a dice being 6 or lower?"
+"What's the probability of the next two rolls of a dice being first `2` and then `4`?" or "What's the 'risk' of the the sum of the next two rolls of a dice being 6 or lower?"
 
 The answer to such questions could be calculated based on the distribution of single events, e.g. 0,16x0,21=0,034 for the "first `2` then `4`" question. (The answer is more optimistic based on just observed data than it should be if all events were assumed to be equally probable as it is true with a fair dice: 0,16x0,16=0,026.)
 
@@ -43,8 +43,8 @@ Or the answer could be looked up in the distribution as well.
 
 Combinations of events are events, too; they define a new type of event with its own events, e.g.
 
-* Two consecutive roles being first `2` and then `4`: `[true, false]`
-* Sum of two consecutive roles: `[2..12]`
+* Two consecutive rolls being first `2` and then `4`: `[true, false]`
+* Sum of two consecutive rolls: `[2..12]`
 
 Again, for example the "first `2` then `4`" question. Looking at the above historical data there are these relevant observed pairs of events:
 
@@ -157,7 +157,7 @@ A forecast based on these events then for example would lead to this distributio
 
 ![](images/sum_of_2_roles_sim_distribution.png)
 
-Based on this the answer to question 2 would be: "The risk of the next two roles summing up to 6 or less is 0,45." (45,1% of all observations are sums of 6 or less.)
+Based on this the answer to question 2 would be: "The risk of the next two rolls summing up to 6 or less is 0,45." (45,1% of all observations are sums of 6 or less.)
 
 Compare this to the "true" distribution for a fair dice:
 
@@ -209,7 +209,7 @@ And here are simulated results for question 1:
 | true | 30 | 0,03 | 3%
 | false | 970 | 0,97 | 97%
 
-Now the answer (p=0,03) is much closer to the calcuated one (p=0,034). Simulating 1000 times two roles obviously leads to a more realistic forecast than just looking at the limited historical data (p=0,058).
+Now the answer (p=0,03) is much closer to the calcuated one (p=0,034). Simulating 1000 times two rolls obviously leads to a more realistic forecast than just looking at the limited historical data (p=0,058).
 
 ## Summary
 Forecasting is about looking up probabilities for events in a distribution compiled from historical data.
@@ -227,7 +227,7 @@ If the historical data is limited then more data can been generated with a Monte
 ### Insight
 > The most likely outcome is not very likely!
 
-Rolling a sum of 7 with the next two roles is the most likely outcome - but its probability still is just 0,172 according to the simulation, which is not very high.
+Rolling a sum of 7 with the next two rolls is the most likely outcome - but its probability still is just 0,172 according to the simulation, which is not very high.
 
 Betting on a single outcome thus is begging for disappointment.
 

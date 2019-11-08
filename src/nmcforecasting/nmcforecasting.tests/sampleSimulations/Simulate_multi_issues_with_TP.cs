@@ -82,7 +82,7 @@ namespace nmcforecasting.tests
             DateTime START_DATE = new DateTime(2019,11,18);
             const int NUMBER_OF_ISSUES = 8;
             
-            var issues = Import("sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
             var tp = Compile_throughput(issues);
             _testOutputHelper.WriteLine($"TP sum: {tp.Sum()}");
             

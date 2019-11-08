@@ -9,11 +9,11 @@ using Xunit.Abstractions;
 
 namespace nmcforecasting.tests
 {
-    public class Simulate_single_issue_delivery
+    public class Simulate_multi_issue_WIP1_delivery
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public Simulate_single_issue_delivery(ITestOutputHelper testOutputHelper) {
+        public Simulate_multi_issue_WIP1_delivery(ITestOutputHelper testOutputHelper) {
             _testOutputHelper = testOutputHelper;
         }
         
@@ -47,51 +47,36 @@ namespace nmcforecasting.tests
         
 
         [Fact]
-        public void Forecast_based_on_all_issues()
+        public void Forecast_8_issues()
         {
-            var issues = Import("sampleData/issue_log.csv").ToArray();
-            var issueCycleTimes = issues.Select(x => x.CycleTime.Days).ToArray();
-            
-            /*
-            var rnd = new Random();
-            int SimulateDelivery(int[] cycleTimes) => cycleTimes[rnd.Next(cycleTimes.Length)];
-            int[] MCSimulation(int n) => Enumerable.Range(1, n).Select(_ => SimulateDelivery(issueCycleTimes)).ToArray();
-            */
+            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
 
-            var histogram = Histogram(issueCycleTimes);
+            IEnumerable<Issue> Filter_issues(params string[] tags) => issues.Where(i => tags.All(t => i.Tags.Contains(t)));
+            int[] Get_cycle_times_in_days(IEnumerable<Issue> issues) => issues.Select(x => x.CycleTime.Days).ToArray();
+
+            var frontend_feature_cts = Get_cycle_times_in_days(Filter_issues("frontend", "feature"));
+            var backend_bug_cts = Get_cycle_times_in_days(Filter_issues("backend", "bug"));
+            var backend_feature_cts = Get_cycle_times_in_days(Filter_issues("backend", "feature"));
+            _testOutputHelper.WriteLine($"Events found: {frontend_feature_cts.Length}, {backend_bug_cts.Length}, {backend_feature_cts.Length}");
+            
+            var rnd = new Random();
+            int SimulateDelivery() =>
+                frontend_feature_cts[rnd.Next(frontend_feature_cts.Length)] +
+                frontend_feature_cts[rnd.Next(frontend_feature_cts.Length)] +
+                frontend_feature_cts[rnd.Next(frontend_feature_cts.Length)] +
+                backend_bug_cts[rnd.Next(backend_bug_cts.Length)] +
+                backend_feature_cts[rnd.Next(backend_feature_cts.Length)] +
+                backend_feature_cts[rnd.Next(backend_feature_cts.Length)] +
+                backend_feature_cts[rnd.Next(backend_feature_cts.Length)] +
+                backend_feature_cts[rnd.Next(backend_feature_cts.Length)];
+            
+            int[] MCSimulation(int n) => Enumerable.Range(1, n).Select(_ => SimulateDelivery()).ToArray();
+
+            var simulationResults = MCSimulation(10000);
+            var histogram = Histogram(simulationResults);
             var distribution = Distribution(histogram);
             
             var deDE = new CultureInfo("de-DE");
-            foreach (var x in distribution.OrderBy(o => o.ct))
-                _testOutputHelper.WriteLine($"{x.ct}\t{x.f}\t{x.p.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
-        }
-        
-        [Fact]
-        public void Forecast_feature_delivery()
-        {
-            var issues = Import("sampleData/issue_log.csv").ToArray();
-            var issueCycleTimes = issues.Where(x => x.Tags.Contains("feature")).Select(x => x.CycleTime.Days).ToArray();
-            
-            var histogram = Histogram(issueCycleTimes);
-            var distribution = Distribution(histogram);
-            
-            var deDE = new CultureInfo("de-DE");
-            _testOutputHelper.WriteLine($"Feature forecast");
-            foreach (var x in distribution.OrderBy(o => o.ct))
-                _testOutputHelper.WriteLine($"{x.ct}\t{x.f}\t{x.p.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
-        }
-        
-        [Fact]
-        public void Forecast_bug_fix_delivery()
-        {
-            var issues = Import("sampleData/issue_log.csv").ToArray();
-            var issueCycleTimes = issues.Where(x => x.Tags.Contains("bug")).Select(x => x.CycleTime.Days).ToArray();
-            
-            var histogram = Histogram(issueCycleTimes);
-            var distribution = Distribution(histogram);
-            
-            var deDE = new CultureInfo("de-DE");
-            _testOutputHelper.WriteLine($"Feature forecast");
             foreach (var x in distribution.OrderBy(o => o.ct))
                 _testOutputHelper.WriteLine($"{x.ct}\t{x.f}\t{x.p.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
         }

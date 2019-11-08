@@ -50,7 +50,7 @@ namespace nmcforecasting.tests
         public void Forecast_8_issues()
         {
             const int N_RESOURCES = 3;
-            var issues = Import("sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
 
             IEnumerable<Issue> Filter_issues(params string[] tags) => issues.Where(i => tags.All(t => i.Tags.Contains(t)));
             int[] Get_cycle_times_in_days(IEnumerable<Issue> issues) => issues.Select(x => x.CycleTime.Days).ToArray();
