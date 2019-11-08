@@ -3,6 +3,20 @@ using System.Linq;
 
 namespace nmcforecasting
 {
+    /*
+     * Simulate how a number of backlog items get worked on by 1 or more resources.
+     * On each resource items are worked on sequentially, whenever the resource is free again.
+     * If more than one resource is employed, backlog items get distributed in a round robin
+     * fashion to the least busy (idle) resource (always starting from the beginning of the
+     * resource list.)
+     *
+     * Example:
+     *     Issues with cycle times: 2, 7, 3, 4, 1, 5
+     *     resource #1: 2, 4
+     *     resource #2: 7
+     *     resource #3: 3, 1, 5
+     *     Delivery time: 9 = 3+1+5, resource #3 is "slowest".
+     */
     class Backlog
     {
         private readonly int[] _itemCycleTimes;
@@ -13,20 +27,15 @@ namespace nmcforecasting
         public int CalculateDeliveryTime(int numberOfResources) {
             var resources = new int[numberOfResources];
             
-            // While there are issues to process...
             var issues = new Queue<int>(_itemCycleTimes);
             while (issues.Any()) {
-                // ...find the first "idle" resource (ie. the resource with least busyness)...
                 var least_busyness = resources.Min();
                 var i_resource_with_least_busyness = 0;
                 while (resources[i_resource_with_least_busyness] != least_busyness)
                     i_resource_with_least_busyness++;
-                // ...and assign it the current issue's cycle time.
                 resources[i_resource_with_least_busyness] += issues.Dequeue();
             }
             
-            // The delivery time equals the larges sum of cycle times of any resource.
-            // It's the resource which worked longest on issues.
             return resources.Max();
         }
     }
