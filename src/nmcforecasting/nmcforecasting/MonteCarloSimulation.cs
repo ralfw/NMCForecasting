@@ -36,9 +36,28 @@ namespace nmcforecasting
             => SimulateBacklog(cycleTimeLogs).CalculateDeliveryTime(numberOfResources);
 
         private Backlog SimulateBacklog(IEnumerable<int[]> cycleTimeLogs)
-            => new Backlog(cycleTimeLogs.Select(SimulateCycleTime).ToArray());
+            => new Backlog(cycleTimeLogs.Select(PickRandomly).ToArray());
 
-        private int SimulateCycleTime(int[] cycleTimeLog)
-            => cycleTimeLog[_nextRnd(cycleTimeLog.Length)];
+
+
+        public int[] SimulateDeliveryBasedOnThroughput(DateTime startDate, int numberOfIssues, params int[][] throughputLogs)
+            => Enumerable.Range(1, _numberOfSimulationRuns)
+                         .Select(_ => SimulateOneDeliveryBasedOnThroughput(startDate, numberOfIssues, throughputLogs))
+                         .ToArray();
+
+        private int SimulateOneDeliveryBasedOnThroughput(DateTime startDate, int numberOfIssues, params int[][] throughputLogs) {
+            var date = startDate.Subtract(new TimeSpan(1,0,0,0));
+            while (numberOfIssues > 0) {
+                date = date.AddDays(1);
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) {
+                    numberOfIssues -= throughputLogs.Sum(PickRandomly);
+                }
+            }
+            return (date - startDate).Days;
+        }
+        
+        
+        private int PickRandomly(int[] log)
+            => log[_nextRnd(log.Length)];
     }
 }
