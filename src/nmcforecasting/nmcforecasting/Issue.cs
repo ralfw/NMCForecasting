@@ -16,5 +16,7 @@ namespace nmcforecasting
         public string[] Tags { get; }
         public string StoryID { get; }
         public bool IsBugfix { get; }
+
+        public TimeSpan CycleTime => Completed.Subtract(Started);
     }
 }

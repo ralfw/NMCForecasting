@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.VisualBasic;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace nmcforecasting.tests
+namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
 {
     public class Simulate_multi_issue_WIP3_delivery
     {

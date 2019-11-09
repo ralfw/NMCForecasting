@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace nmcforecasting.tests
+namespace nmcforecasting.tests.sampleSimulations
 {
     public class Simulate_rolling_two_dice
     {
