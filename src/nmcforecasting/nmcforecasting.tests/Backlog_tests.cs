@@ -1,3 +1,4 @@
+using nmcforecasting.supporting;
 using Xunit;
 
 namespace nmcforecasting.tests

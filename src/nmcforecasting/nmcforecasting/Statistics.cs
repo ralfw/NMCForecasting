@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace nmcforecasting
 {
-    public class Statistics
+    public static class Statistics
     {
         public static (int value, int f, double p, double percentile)[] Distribution(IEnumerable<int> events)
             => Distribution(Histogram(events));

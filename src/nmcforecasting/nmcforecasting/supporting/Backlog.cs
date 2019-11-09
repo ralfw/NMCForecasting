@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace nmcforecasting
+namespace nmcforecasting.supporting
 {
     /*
      * Simulate how a number of backlog items get worked on by 1 or more resources.
