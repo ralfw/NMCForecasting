@@ -85,8 +85,27 @@ namespace nmcforecasting
             var issuesSimulation = SimulateIssuesDerivedFromStories(issuesPerStoryLog_for_all_stories);
 
             var throughputLog = issues.BusinessDayThroughputs();
-            return issuesSimulation.SelectMany(numberOfIssues => SimulateIssueDeliveryBasedOnThroughput(startDate, numberOfIssues, throughputLog))
-                                   .ToArray();
+            return SimulateIssueDeliveryForEveryNumberOfIssues(startDate, throughputLog, issuesSimulation);
+        }
+
+        private int[] SimulateIssueDeliveryForEveryNumberOfIssues(DateTime startDate, int[] throughputLog, int[] issuesSimulation) {
+            var issuesHistogram = Statistics.Histogram(issuesSimulation);
+            return issuesHistogram.SelectMany(SimulateDelivery).ToArray();
+
+            IEnumerable<int> SimulateDelivery((int numberOfIssues, int frequency) refinement) {
+                var deliverySimulation = SimulateIssueDeliveryBasedOnThroughput(startDate, refinement.numberOfIssues, throughputLog).ToArray();
+                return Enumerable.Range(1, refinement.frequency).SelectMany(_ => deliverySimulation);
+                /*
+                 * Every simulation for the delivery of a number of issues needs to be output
+                 * as many times as the number of issues occurs in the histogram. Only that way
+                 * each delivery time in the end shows up with the correct frequency in the
+                 * final distribution.
+                 *
+                 * The histogram is used to reduce the number of SimulateIssueDeliveryBasedOnThroughput() calls.
+                 * It's much faster to "multiply" the simulation result than running the simulation as the
+                 * frequency calls for.
+                 */
+            }
         }
     }
 }
