@@ -49,7 +49,7 @@ namespace nmcforecasting.tests
         [Fact]
         public void Forecast_based_on_all_issues()
         {
-            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
             var issueCycleTimes = issues.Select(x => x.CycleTime.Days).ToArray();
             
             /*
@@ -69,7 +69,7 @@ namespace nmcforecasting.tests
         [Fact]
         public void Forecast_feature_delivery()
         {
-            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
             var issueCycleTimes = issues.Where(x => x.Tags.Contains("feature")).Select(x => x.CycleTime.Days).ToArray();
             
             var histogram = Histogram(issueCycleTimes);
@@ -84,7 +84,7 @@ namespace nmcforecasting.tests
         [Fact]
         public void Forecast_bug_fix_delivery()
         {
-            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
             var issueCycleTimes = issues.Where(x => x.Tags.Contains("bug")).Select(x => x.CycleTime.Days).ToArray();
             
             var histogram = Histogram(issueCycleTimes);

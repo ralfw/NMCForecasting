@@ -9,11 +9,11 @@ using Xunit.Abstractions;
 
 namespace nmcforecasting.tests
 {
-    public class Simulate_multi_issue_WIP1_delivery
+    public class Simulate_multi_issues_with_TP
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public Simulate_multi_issue_WIP1_delivery(ITestOutputHelper testOutputHelper) {
+        public Simulate_multi_issues_with_TP(ITestOutputHelper testOutputHelper) {
             _testOutputHelper = testOutputHelper;
         }
         
@@ -43,34 +43,51 @@ namespace nmcforecasting.tests
                 };
             }
         }
-        
+
+
+        int[] Compile_throughput(Issue[] issues) {
+            var firstStartDate = issues.Min(x => x.StartDate);
+            var lastCompletionDate = issues.Max(x => x.CompletionDate);
+            var allDates = Enumerable.Range(0, (lastCompletionDate - firstStartDate).Days + 1)
+                                     .Select(offset => firstStartDate.AddDays(offset))
+                                     .Where(date => date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday);
+            
+            var dailyTP = new Dictionary<DateTime,int>();
+            foreach (var date in allDates)
+                dailyTP[date] = 0;
+            
+            foreach (var issue in issues)
+                dailyTP[issue.CompletionDate] += 1;
+
+            return dailyTP.Values.ToArray();
+        }
+
+
+        int SimulateDelivery(DateTime startDate, int numberOfIssues, int[] throughput, Random rnd) {
+            var date = startDate;
+            while (numberOfIssues > 0) {
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) {
+                    var tp_on_date = throughput[rnd.Next(throughput.Length)];
+                    numberOfIssues -= tp_on_date;
+                }
+                date = date.AddDays(1);
+            }
+            return (date - startDate).Days;
+        }
         
 
         [Fact]
         public void Forecast_8_issues()
         {
-            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
-
-            IEnumerable<Issue> Filter_issues(params string[] tags) => issues.Where(i => tags.All(t => i.Tags.Contains(t)));
-            int[] Get_cycle_times_in_days(IEnumerable<Issue> issues) => issues.Select(x => x.CycleTime.Days).ToArray();
-
-            var frontend_feature_cts = Get_cycle_times_in_days(Filter_issues("frontend", "feature"));
-            var backend_bug_cts = Get_cycle_times_in_days(Filter_issues("backend", "bug"));
-            var backend_feature_cts = Get_cycle_times_in_days(Filter_issues("backend", "feature"));
-            _testOutputHelper.WriteLine($"Events found: {frontend_feature_cts.Length}, {backend_bug_cts.Length}, {backend_feature_cts.Length}");
+            DateTime START_DATE = new DateTime(2019,11,18);
+            const int NUMBER_OF_ISSUES = 8;
+            
+            var issues = Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
+            var tp = Compile_throughput(issues);
+            _testOutputHelper.WriteLine($"TP sum: {tp.Sum()}");
             
             var rnd = new Random();
-            int SimulateDelivery() =>
-                frontend_feature_cts[rnd.Next(frontend_feature_cts.Length)] +
-                frontend_feature_cts[rnd.Next(frontend_feature_cts.Length)] +
-                frontend_feature_cts[rnd.Next(frontend_feature_cts.Length)] +
-                backend_bug_cts[rnd.Next(backend_bug_cts.Length)] +
-                backend_feature_cts[rnd.Next(backend_feature_cts.Length)] +
-                backend_feature_cts[rnd.Next(backend_feature_cts.Length)] +
-                backend_feature_cts[rnd.Next(backend_feature_cts.Length)] +
-                backend_feature_cts[rnd.Next(backend_feature_cts.Length)];
-            
-            int[] MCSimulation(int n) => Enumerable.Range(1, n).Select(_ => SimulateDelivery()).ToArray();
+            int[] MCSimulation(int n) => Enumerable.Range(1, n).Select(_ => SimulateDelivery(START_DATE, NUMBER_OF_ISSUES, tp, rnd)).ToArray();
 
             var simulationResults = MCSimulation(10000);
             var histogram = Histogram(simulationResults);
@@ -99,6 +116,21 @@ namespace nmcforecasting.tests
                     return (x.ct, x.f, p, percentile * 100.0);
                 })
                 .ToArray();
+        }
+
+        
+
+        [Fact]
+        public void Compile_throughput_test()
+        {
+            var result = Compile_throughput(new[] {
+                new Issue{StartDate = new DateTime(2019,10,1), CompletionDate = new DateTime(2019,10,2)},
+                new Issue{StartDate = new DateTime(2019,10,2), CompletionDate = new DateTime(2019,10,4)},
+                new Issue{StartDate = new DateTime(2019,10,2), CompletionDate = new DateTime(2019,10,7)},
+                new Issue{StartDate = new DateTime(2019,10,3), CompletionDate = new DateTime(2019,10,4)}
+            });
+            
+            Assert.Equal(new[]{0,1,0,2,1}, result);
         }
     }
 }

@@ -93,7 +93,7 @@ namespace nmcforecasting.tests
             DateTime START_DATE = new DateTime(2019,11,18);
             const int NUMBER_OF_STORIES = 10;
             
-            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
             var issue_story_ratios = Compile_issue_story_ratios(issues);
             
             // simulate number of issues
@@ -147,7 +147,7 @@ namespace nmcforecasting.tests
             DateTime START_DATE = new DateTime(2019,11,18);
             const int NUMBER_OF_STORIES = 10;
             
-            var issues = Import("sampleSimulations/sampleData/issue_log.csv").ToArray();
+            var issues = Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
             var issue_story_ratios = Compile_issue_story_ratios(issues);
             
             // simulate number of issues
