@@ -13,7 +13,7 @@ namespace nmcforecasting
         }
 
 
-        static IEnumerable<DateTime> Build_delivery_calendar_without_weekends(Issue[] issues) {
+        private static IEnumerable<DateTime> Build_delivery_calendar_without_weekends(Issue[] issues) {
             var firstStartDate = issues.Min(x => x.Started);
             var lastCompletionDate = issues.Max(x => x.Completed);
             return Enumerable.Range(0, (lastCompletionDate - firstStartDate).Days + 1)
@@ -21,7 +21,7 @@ namespace nmcforecasting
                              .Where(date => !OnWeekend(date));  
         }
 
-        static int[] Compile_daily_throughputs(IEnumerable<DateTime> calendar, Issue[] issues) {
+        private static int[] Compile_daily_throughputs(IEnumerable<DateTime> calendar, Issue[] issues) {
             var throughputs = new Dictionary<DateTime,int>();
             foreach (var date in calendar) throughputs[date] = 0;
 
@@ -34,7 +34,7 @@ namespace nmcforecasting
         }
 
 
-        static bool OnWeekend(DateTime date) 
+        private static bool OnWeekend(DateTime date) 
             => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
     }
 }

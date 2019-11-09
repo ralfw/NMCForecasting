@@ -55,6 +55,12 @@ namespace nmcforecasting
             }
             return (date - startDate).Days;
         }
+
+
+        public int[] SimulateStoryRefinement(double darkIssuesFraction, params int[][] issuesPerStoryLogs)
+        {
+            throw new NotImplementedException();
+        }
         
         
         private int PickRandomly(int[] log)
