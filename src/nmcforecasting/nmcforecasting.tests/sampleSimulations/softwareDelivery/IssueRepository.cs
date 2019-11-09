@@ -7,6 +7,9 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
 {
     class IssueRepository
     {
+        private const string DEFAULT_FILENAME = "sampleSimulations/softwareDelivery/sampleData/issue_log.csv";
+
+        public static IEnumerable<Issue> Import() => Import(DEFAULT_FILENAME);
         public static IEnumerable<Issue> Import(string filename)
         {
             using var csvReader = new Microsoft.VisualBasic.FileIO.TextFieldParser(filename) {Delimiters = new[] {";"}};

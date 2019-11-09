@@ -18,7 +18,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
         
         [Fact]
         public void Forecast_based_on_all_issues() {
-            var issues = IssueRepository.Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
+            var issues = IssueRepository.Import().ToArray();
             var issueCycleTimes = issues.Select(x => x.CycleTime.Days).ToArray();
             
             var distribution = Statistics.Distribution(issueCycleTimes);
@@ -31,7 +31,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
         
         [Fact]
         public void Forecast_feature_delivery() {
-            var issues = IssueRepository.Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
+            var issues = IssueRepository.Import().ToArray();
             var issueCycleTimes = issues.Where(x => x.Tags.Contains("feature")).Select(x => x.CycleTime.Days).ToArray();
             
             var distribution = Statistics.Distribution(issueCycleTimes);
@@ -46,7 +46,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
         [Fact]
         public void Forecast_bug_fix_delivery()
         {
-            var issues = IssueRepository.Import("sampleSimulations/softwareDelivery/sampleData/issue_log.csv").ToArray();
+            var issues = IssueRepository.Import().ToArray();
             var issueCycleTimes = issues.Where(x => x.IsBugfix).Select(x => x.CycleTime.Days).ToArray();
             
             var distribution = Statistics.Distribution(issueCycleTimes);
