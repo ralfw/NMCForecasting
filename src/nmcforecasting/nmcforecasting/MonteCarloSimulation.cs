@@ -71,9 +71,9 @@ namespace nmcforecasting
 
 
         /*
-         * First derive the story refinement into issues from the issue data.
+         * First derive the story refinement history from the issue data.
          * For the number of stories in question simulate the number of issues
-         * they could get refined into.
+         * they could lead to.
          *
          * For all the possible numbers of issues simulate how long
          * their delivery would take based on the historical issue throughput.
