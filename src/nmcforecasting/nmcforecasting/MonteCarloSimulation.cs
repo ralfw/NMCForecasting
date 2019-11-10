@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using nmcforecasting.supporting;
 
 namespace nmcforecasting
@@ -40,7 +41,6 @@ namespace nmcforecasting
             => new Backlog(cycleTimeLogs.Select(PickRandomly).ToArray());
 
 
-
         public int[] SimulateIssueDeliveryBasedOnThroughput(DateTime startDate, int numberOfIssues, params int[][] throughputLogs)
             => Enumerable.Range(1, _numberOfSimulationRuns)
                          .Select(_ => SimulateOnceIssueDeliveryBasedOnThroughput(startDate, numberOfIssues, throughputLogs))
@@ -52,6 +52,14 @@ namespace nmcforecasting
                 date = date.AddDays(1);
                 if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) {
                     numberOfIssues -= throughputLogs.Sum(PickRandomly);
+                    /*
+                     * For each new day a TP value is picked from all (!) logs passed in.
+                     * Maybe one is a backend feature log, the other is a frontend feature log, and yet another one
+                     * is a bug log. Then eg. the TPs (1,0,2) are picked resulting in a total TP of 3.
+                     *
+                     * Assumption: Several type specific TP logs are more sparsely populated than a single TP log for all
+                     * sorts of issue types.
+                     */
                 }
             }
             return (date - startDate).Days;
