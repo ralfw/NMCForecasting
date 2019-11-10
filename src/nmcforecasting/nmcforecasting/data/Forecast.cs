@@ -7,6 +7,8 @@ namespace nmcforecasting
 {
     public class Forecast
     {
+        private IEnumerable<ForecastEntry> _entries;
+        
         public class ForecastEntry {
             public int DaysUntilDelivery { get; }
             public double Probability { get; }
@@ -20,13 +22,13 @@ namespace nmcforecasting
         }
 
         internal Forecast((int cycleTimeDays, int _, double probability, double percentile)[] distribution) {
-            Entries = distribution.Select(x => new ForecastEntry(
+            _entries = distribution.Select(x => new ForecastEntry(
                 x.cycleTimeDays,
                 x.probability,
                 x.percentile
             ));
         }
-        
-        public IEnumerable<ForecastEntry> Entries { get; }
+
+        public ForecastEntry[] Entries => _entries.ToArray();
     }
 }
