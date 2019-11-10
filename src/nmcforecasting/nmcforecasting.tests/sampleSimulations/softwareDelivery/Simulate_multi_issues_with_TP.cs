@@ -33,7 +33,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
             
             var deDE = new CultureInfo("de-DE");
             foreach (var x in distribution.OrderBy(o => o.value))
-                _testOutputHelper.WriteLine($"{x.value}\t{x.f}\t{x.p.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
+                _testOutputHelper.WriteLine($"{x.value}\t{x.frequency}\t{x.probability.ToString("0.000", deDE)}\t{x.percentile.ToString("0.0", deDE)}");
         }
         
         

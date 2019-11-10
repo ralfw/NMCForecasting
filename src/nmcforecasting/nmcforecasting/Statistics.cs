@@ -5,17 +5,17 @@ namespace nmcforecasting
 {
     public static class Statistics
     {
-        public static (int value, int f, double p, double percentile)[] Distribution(IEnumerable<int> events)
+        public static (int value, int frequency, double probability, double percentile)[] Distribution(IEnumerable<int> events)
             => Distribution(Histogram(events));
         
-        public static (int value, int f, double p, double percentile)[] Distribution((int value, int f)[] histogram) {
-            var n = (double)histogram.Sum(x => x.f);
+        public static (int value, int frequency, double probability, double percentile)[] Distribution((int value, int frequency)[] histogram) {
+            var n = (double)histogram.Sum(x => x.frequency);
             var percentile = 0.0;
             return histogram.OrderBy(x => x.value)
                             .Select(x => {
-                                var p = x.f / n;
+                                var p = x.frequency / n;
                                 percentile += p;
-                                return (x.value, x.f, p, percentile * 100.0);
+                                return (x.value, x.frequency, p, percentile * 100.0);
                             })
                             .ToArray();
         }
