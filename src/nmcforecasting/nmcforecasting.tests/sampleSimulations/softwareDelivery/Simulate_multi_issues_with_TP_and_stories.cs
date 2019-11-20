@@ -26,7 +26,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
             var issues = IssueRepository.Import().ToArray();
             var issuesPerStory = issues.IssuesPerStory();
             
-            var sut = new MonteCarloSimulation();
+            var sut = new SoftwareDeliverySimulation();
             var issueSimulationresult = sut.SimulateIssuesDerivedFromStories(
                 Enumerable.Range(1,NUMBER_OF_STORIES).Select(_ => issuesPerStory).ToArray()
             );
@@ -61,7 +61,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
             
             var issues = IssueRepository.Import().ToArray();
             
-            var sut = new MonteCarloSimulation();
+            var sut = new SoftwareDeliverySimulation();
             var simulationresult = sut.SimulateStoryDeliveryBasedOnThroughput(START_DATE, NUMBER_OF_STORIES, issues);
             var distribution = Statistics.Distribution(simulationresult);
             

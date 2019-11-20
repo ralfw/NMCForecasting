@@ -5,10 +5,10 @@ namespace nmcforecasting
 {
     public class Forecasting
     {
-        private readonly MonteCarloSimulation _mc;
+        private readonly SoftwareDeliverySimulation _mc;
         
-        public Forecasting() => _mc = new MonteCarloSimulation();
-        internal Forecasting(MonteCarloSimulation mc) => _mc = mc;
+        public Forecasting() => _mc = new SoftwareDeliverySimulation();
+        internal Forecasting(SoftwareDeliverySimulation mc) => _mc = mc;
         
         
         public Forecast WhenWillTheIssueBeDone(Issue[] deliveryHistory) 

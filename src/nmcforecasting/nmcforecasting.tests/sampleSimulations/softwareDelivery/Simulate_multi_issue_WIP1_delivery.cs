@@ -29,7 +29,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
             var backend_feature_cts = Get_cycle_times_in_days(Filter_issues("backend", "feature"));
             _testOutputHelper.WriteLine($"Events found: {frontend_feature_cts.Length}, {backend_bug_cts.Length}, {backend_feature_cts.Length}");
 
-            var sut = new MonteCarloSimulation();
+            var sut = new SoftwareDeliverySimulation();
             var simulations = sut.SimulateIssueDeliveryByResources(
                 frontend_feature_cts,
                 frontend_feature_cts,

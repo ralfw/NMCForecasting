@@ -10,7 +10,7 @@ namespace nmcforecasting.tests
         public void Single_issue_single_resource() {
             var historicalCTs = new[] {1, 2, 3};
             var randomNumbers = new Queue<int>(new[] {2, 1, 0});
-            var sut = new MonteCarloSimulation(3, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(3, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateIssueDeliveryByResources(historicalCTs);
             
@@ -23,7 +23,7 @@ namespace nmcforecasting.tests
             var historicalCTsA = new[] {1, 2, 3};
             var historicalCTsB = new[] {10, 20, 30};
             var randomNumbers = new Queue<int>(new[] {2,1, 0,2, 1,0});
-            var sut = new MonteCarloSimulation(3, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(3, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateIssueDeliveryByResources(historicalCTsA, historicalCTsB);
             
@@ -36,7 +36,7 @@ namespace nmcforecasting.tests
             var historicalCTsA = new[] {1, 2, 3};
             var historicalCTsB = new[] {10, 20, 30};
             var randomNumbers = new Queue<int>(new[] {2,1, 0,2, 1,0});
-            var sut = new MonteCarloSimulation(3, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(3, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateIssueDeliveryByResources(2, historicalCTsA, historicalCTsB);
             
@@ -49,7 +49,7 @@ namespace nmcforecasting.tests
         public void Single_throughput_history() {
             var historicalTPs = new[] {1, 2, 3};
             var randomNumbers = new Queue<int>(new[] {2,2,2,2, 0,1,2,0,1,2});
-            var sut = new MonteCarloSimulation(2, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(2, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateIssueDeliveryBasedOnThroughput(new DateTime(2019, 10, 3), 10, historicalTPs);
             
@@ -73,7 +73,7 @@ namespace nmcforecasting.tests
                 0,0, // 1+0=1/9
                 1,2 // 2+2=4/13
             }); //2,2,3,1,1,
-            var sut = new MonteCarloSimulation(2, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(2, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateIssueDeliveryBasedOnThroughput(new DateTime(2019, 10, 3), 10, historicalTPsA, historicalTPsB);
             
@@ -89,7 +89,7 @@ namespace nmcforecasting.tests
             var historicalStoryRefinementsB = new[] {10, 20, 30};
             var randomNumbers = new Queue<int>(new[] {2,1, 0,2, 1,0});
             
-            var sut = new MonteCarloSimulation(3, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(3, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateIssuesDerivedFromStories(historicalStoryRefinementsA, historicalStoryRefinementsB);
             
@@ -148,7 +148,7 @@ namespace nmcforecasting.tests
                 1,2,3,1, // 4 days - 1
                 1,1,1,1,1,1,1 // 9 days due to weekend - 1
             });
-            var sut = new MonteCarloSimulation(2, maxNumber => randomNumbers.Dequeue());
+            var sut = new SoftwareDeliverySimulation(2, maxNumber => randomNumbers.Dequeue());
 
             var result = sut.SimulateStoryDeliveryBasedOnThroughput(new DateTime(2019, 10, 1), 2, historicalData);
             

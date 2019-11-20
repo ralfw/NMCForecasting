@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +19,11 @@ namespace nmcforecasting
                                 return (x.value, x.frequency, p, percentile * 100.0);
                             })
                             .ToArray();
+        }
+
+        public static (double mode, double mean, double median) KPIs((int value, int frequency, double probability, double percentile)[] distribution)
+        {
+            throw new NotImplementedException();   
         }
         
         

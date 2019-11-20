@@ -27,7 +27,7 @@ namespace nmcforecasting.tests.sampleSimulations.softwareDelivery
             var tp = issues.BusinessDayThroughputs();
             _testOutputHelper.WriteLine($"TP sum: {tp.Sum()}");
 
-            var sut = new MonteCarloSimulation();
+            var sut = new SoftwareDeliverySimulation();
             var simulationresult = sut.SimulateIssueDeliveryBasedOnThroughput(START_DATE, NUMBER_OF_ISSUES, tp);
             var distribution = Statistics.Distribution(simulationresult);
             
