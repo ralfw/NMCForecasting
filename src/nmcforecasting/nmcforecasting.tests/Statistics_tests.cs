@@ -28,5 +28,25 @@ namespace nmcforecasting.tests
                 Xunit.Assert.Equal(expected.pc, value.pc, 3);
             }
         }
+
+        [Fact]
+        public void DistributionKPIs()
+        {
+            var data = new[] { 1,
+                2,
+                2,
+                2,
+                2,
+                3,
+                3,
+                5,
+                7,
+                9};
+            var dist = Statistics.Distribution(data);
+            var result = Statistics.DistributionKPIs(dist);
+            Assert.Equal(2, result.firstMode);
+            Assert.Equal(3.6, result.mean);
+            Assert.Equal(2.0, result.median);
+        }
     }
 }

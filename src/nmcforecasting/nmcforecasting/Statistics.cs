@@ -21,9 +21,25 @@ namespace nmcforecasting
                             .ToArray();
         }
 
-        public static (double mode, double mean, double median) KPIs((int value, int frequency, double probability, double percentile)[] distribution)
-        {
-            throw new NotImplementedException();   
+        public static (int firstMode, double mean, double median) DistributionKPIs((int value, int frequency, double probability, double percentile)[] distribution) {
+            var modeFrequency = distribution.Max(x => x.frequency);
+            var firstMode = distribution.First(x => x.frequency == modeFrequency).value;
+
+            var mean = distribution.Sum(x => x.value * x.probability);
+
+            var n = distribution.Sum(x => x.frequency);
+            var iMedian = (n+1) / 2;
+            var nFound = 0;
+            var median = 0.0;
+            for (var i = 0; i < distribution.Length; i++) {
+                nFound += distribution[i].frequency;
+                if (nFound >= iMedian) {
+                    median = distribution[i].value;
+                    break;
+                }
+            }
+            
+            return (firstMode, mean, median);
         }
         
         
